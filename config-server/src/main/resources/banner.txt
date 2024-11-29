@@ -1,0 +1,15 @@
+
+${AnsiColor.BRIGHT_MAGENTA}
+${AnsiBackground.BRIGHT_GREEN}
+ _   _   ___   _____  ____   ___  ____   ___   ___
+) \_/ ( )_ _( )__ __(/ __ \ / _( / __ \ \   \ ) __(
+|  _  | _| |_   | |  ))__(( ))_  ))__(( | ) ( | _)
+)_( )_()_____(  )_(  \____/ \__( \____/ /___/ )___(
+
+${AnsiColor.DEFAULT}
+${AnsiBackground.DEFAULT}
+
+${application.title} - ${application.version}
+
+Developed by ${application.author}
+

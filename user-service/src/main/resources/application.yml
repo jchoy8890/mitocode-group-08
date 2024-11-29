@@ -1,0 +1,4 @@
+application:
+  title: @project.name@
+  version: @project.version@
+  author: Mitocode Network

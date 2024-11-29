@@ -1,0 +1,4 @@
+application:
+  author: Jonathan Choy
+  title: @project.name@
+  version: @project.version@

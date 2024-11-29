@@ -1,0 +1,21 @@
+server:
+  port: 8764
+
+spring:
+  application:
+    name: discovery-server
+  config:
+    activate:
+      onProfile: server-04
+
+eureka:
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+  datacenter: Mitocode
+  environment: Development
+
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+    leaseExpirationDurationInSeconds: 30

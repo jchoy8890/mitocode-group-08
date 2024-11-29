@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: product-service
+  cloud:
+    config:
+      uri: ${CONFIG.SERVER.HOSTNAME:http://localhost:9000}
+      profile: ${ENVIRONMENT.DEPLOY:dev} # product-service-dev.yml
+      enabled: true

@@ -1,0 +1,106 @@
+server:
+  port: ${CUSTOM.SERVER.PORT:8761}
+
+spring:
+  application:
+    name: discovery-server
+  config:
+    activate:
+      onProfile: mitocode
+
+
+eureka:
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+  datacenter: Mitocode
+  environment: Development
+
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+    leaseExpirationDurationInSeconds: 30
+
+---
+
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discovery-server
+  config:
+    activate:
+      onProfile: server-01
+
+eureka:
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://server-02.com:8762/eureka, http://server-03.com:8763/eureka
+  datacenter: Mitocode
+  environment: Development
+
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+    leaseExpirationDurationInSeconds: 30
+
+
+---
+
+server:
+  port: 8762
+
+spring:
+  application:
+    name: discovery-server
+  config:
+    activate:
+      onProfile: server-02
+
+eureka:
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://server-01.com:8761/eureka, http://server-03.com:8763/eureka
+  datacenter: Mitocode
+  environment: Development
+
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+    leaseExpirationDurationInSeconds: 30
+
+---
+
+server:
+  port: 8763
+
+spring:
+  application:
+    name: discovery-server
+  config:
+    activate:
+      onProfile: server-03
+
+eureka:
+  client:
+    fetchRegistry: false
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://server-02.com:8762/eureka, http://server-01.com:8761/eureka
+  datacenter: Mitocode
+  environment: Development
+
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+    leaseExpirationDurationInSeconds: 30
+
+
+    # Mi Nombre Completo
+    # miNombreCompleto --> Camel Case
+    # mi_nombre_completo --> Snake Case

@@ -1,0 +1,48 @@
+server:
+  port: ${CUSTOM.SERVER.PORT:9000}
+
+spring:
+  application:
+    name: config-server
+#  profiles:
+#    active: vault
+
+#
+#  cloud:
+#    config:
+#      server:
+#        vault:
+#          host: localhost
+#          port: 8200
+#          scheme: http
+#          kvVersion: 2
+#          backend: mitocode
+#          authentication: TOKEN
+#          token: 00000000-0000-0000-0000-000000000
+#          profileSeparator: /
+
+
+  cloud:
+    config:
+      server:
+
+        git:
+          uri: https://github.com/mitocode-microservices/course08-mitocode-config-server-files.git
+#          username: jchoy8890
+#          password: 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
+          cloneOnStart: true
+          defaultLabel: develop
+          refreshRate: 10 # segundos
+        encrypt:
+          enabled: true
+
+
+encrypt:
+  key: mitocode-secret
+
+eureka:
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA.SERVER.HOST:http://server-01.com:8761/eureka} #, http://server-03.com:8763/eureka # http://localhost:8761/eureka
