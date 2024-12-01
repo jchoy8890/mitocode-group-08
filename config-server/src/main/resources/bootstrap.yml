@@ -34,7 +34,6 @@ spring:
           defaultLabel: develop
           refreshRate: 10 # segundos
         encrypt:
-          enabled: true
 
 
 encrypt:
