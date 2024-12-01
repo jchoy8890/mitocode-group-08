@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: client-service
+  cloud:
+    config:
+      uri: ${CONFIG.SERVER.HOSTNAME:http://localhost:9000}
+      profile: ${ENVIRONMENT.DEPLOY:dev}
+      enabled: true
