@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +17,7 @@ public class ClientController {
 
     @GetMapping("/product")
     public List<ProductDTO> getAllProducts() {
-        return clientService.getAllProducts();
+        return clientService.getAllProductsAnnotation();
     }
 
     @GetMapping("/user")
@@ -30,8 +31,13 @@ public class ClientController {
     }
 
     @GetMapping("/product/{flagSlow}")
-    public List<ProductDTO> addProduct(@PathVariable("flagSlow") boolean flagSlow) {
-        return clientService.getAllProductsWithParameter(flagSlow);
+    public CompletableFuture<List<ProductDTO>> getProductFlag(@PathVariable("flagSlow") boolean flagSlow) {
+        return clientService.getAllProductsWithParameterAnnotation(flagSlow);
+    }
+
+    @GetMapping("/products/{flagSlow}")
+    public List<ProductDTO> getProductsFlag(@PathVariable("flagSlow") boolean flagSlow) {
+        return clientService.getAllProductsWithParameterCB(flagSlow);
     }
 
 }

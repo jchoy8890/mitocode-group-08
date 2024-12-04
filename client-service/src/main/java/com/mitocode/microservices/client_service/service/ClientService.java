@@ -4,12 +4,17 @@ import com.mitocode.microservices.client_service.model.dto.ProductDTO;
 import com.mitocode.microservices.client_service.model.dto.UserDTO;
 import com.mitocode.microservices.client_service.proxy.openfeign.ProductServiceFeign;
 import com.mitocode.microservices.client_service.proxy.openfeign.UserServiceFeign;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -22,21 +27,65 @@ public class ClientService {
     private final CircuitBreakerFactory circuitBreakerFactory;
 
 
+    @CircuitBreaker(name = "mitocode-product", fallbackMethod = "customSimpleFallback")
+    public List<ProductDTO> getAllProductsAnnotation() {
+        return productServiceFeign.getAllProducts();
+    }
+
+
+    @CircuitBreaker(name = "mitocode-product", fallbackMethod = "customFlagFallback")
+    public List<ProductDTO> getAllProductsWithParameterCB(boolean flag) {
+        return productServiceFeign
+                .getAllProductsWithParameter(flag, "client-service");
+
+    }
+
+
+    /**  ========= Implementación sin Timelimiter ==============
+     *
+     * @CircuitBreaker(name = "mitocode-product", fallbackMethod = "customFlagFallback")
+     * public List<ProductDTO> getAllProductsWithParameterAnnotation(boolean flag) {
+     * return productServiceFeign.getAllProductsWithFlagForSlow(flag);
+     * }
+     *
+     **/
+
+
+    /**
+     * ========= Implementación con Timelimiter ==============
+     */
+    @Retry(name = "default")
+    @CircuitBreaker(name = "mitocode-product")
+    @TimeLimiter(name = "mitocode-product-tl")
+    public CompletableFuture<List<ProductDTO>> getAllProductsWithParameterAnnotation(boolean flag) {
+        return
+                CompletableFuture.supplyAsync(
+                        () -> productServiceFeign.getAllProductsWithFlagForSlow(flag)
+                );
+    }
+
+
     public List<ProductDTO> getAllProducts() {
 
-
         return circuitBreakerFactory.create("mitocode")
-                .run(()-> productServiceFeign.getAllProducts());
+                .run(() -> productServiceFeign.getAllProducts(),
+                        (e) -> customSimpleFallback(e)
+                );
+    }
 
 
-        /**
-         * Sliding Window Size: 100 últimos requests
-         * Failure Rate Threshold: 50%
-         * Wait Duration in Open State: 60 segundos
-         * Permitted Number of Calls in Half Open State: 10 requests
-         * */
+    public List<ProductDTO> customSimpleFallback(Throwable e) {
+        log.error(e.getMessage());
+        List<ProductDTO> lstProducts = new ArrayList<>();
+        lstProducts.add(ProductDTO.builder()
+                .port(9999)
+                .price(100L)
+                .productId("P99999")
+                .productName("Product Fake")
+                .productType("Fake")
 
-
+                .build());
+        return lstProducts;
     }
 
     public UserDTO getAllUsers() {
@@ -48,8 +97,48 @@ public class ClientService {
     }
 
     public List<ProductDTO> getAllProductsWithParameter(boolean flag) {
-        return
-                circuitBreakerFactory.create("mitocode-slow")
-                                .run(()->productServiceFeign.getAllProductsWithFlagForSlow(flag));
+        return null;
+//                circuitBreakerFactory.create("mitocode-slow")
+//                        .run(() -> productServiceFeign.getAllProductsWithFlagForSlow(flag),
+//                                (e) -> customFlagFallback(flag, e));
+    }
+
+
+    /**
+     * ========= Implementación sin Timelimiter ==============
+     * <p>
+     * <p>
+     * <p>
+     * public List<ProductDTO> customFlagFallback(boolean flag, Throwable e) {
+     * log.error("With flag " + flag + " : " + e.getMessage());
+     * List<ProductDTO> lstProducts = new ArrayList<>();
+     * lstProducts.add(ProductDTO.builder()
+     * .port(9999)
+     * .price(100L)
+     * .productId("P99999")
+     * .productName("Product Fake")
+     * .productType("Fake")
+     * <p>
+     * .build());
+     * return lstProducts;
+     * }
+     */
+
+
+    /**
+     * ========= Implementación con Timelimiter ==============
+     **/
+    public CompletableFuture<List<ProductDTO>> customFlagFallback(boolean flag, Throwable e) {
+        log.error("With flag " + flag + " : " + e.getMessage());
+        List<ProductDTO> lstProducts = new ArrayList<>();
+        lstProducts.add(ProductDTO.builder()
+                .port(9999)
+                .price(100L)
+                .productId("P99999")
+                .productName("Product Fake")
+                .productType("Fake")
+
+                .build());
+        return CompletableFuture.supplyAsync(()->lstProducts);
     }
 }

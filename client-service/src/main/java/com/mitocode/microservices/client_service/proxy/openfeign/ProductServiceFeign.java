@@ -3,11 +3,7 @@ package com.mitocode.microservices.client_service.proxy.openfeign;
 
 import com.mitocode.microservices.client_service.model.dto.ProductDTO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,4 +19,10 @@ public interface ProductServiceFeign {
 
     @GetMapping("/product/slow/{flag}")
     List<ProductDTO> getAllProductsWithFlagForSlow(@PathVariable("flag") boolean flag);
+
+    @GetMapping("/products")
+    List<ProductDTO> getAllProductsWithParameter(
+            @RequestParam("flag") boolean flag,
+            @RequestHeader("appCallerName") String appCallerName);
+
 }
