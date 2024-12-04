@@ -47,7 +47,7 @@ public class ProductController {
 
         if (flag) {
             log.info("Product Service slow");
-            TimeUnit.MILLISECONDS.sleep(1500);
+            TimeUnit.MILLISECONDS.sleep(2400);
         }
         return ResponseEntity.ok(productService.getAllProducts());
     }
@@ -59,7 +59,7 @@ public class ProductController {
     ) throws Exception {
 
         if (flag) {
-            TimeUnit.MILLISECONDS.sleep(1500);
+            TimeUnit.MILLISECONDS.sleep(795);
             throw new Exception("Probando Circuit Breaker");
         }
         return ResponseEntity.ok(productService.getAllProducts());
