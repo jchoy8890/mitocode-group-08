@@ -5,8 +5,6 @@ import com.mitocode.microservices.client_service.model.dto.UserDTO;
 import com.mitocode.microservices.client_service.proxy.openfeign.ProductServiceFeign;
 import com.mitocode.microservices.client_service.proxy.openfeign.UserServiceFeign;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
-import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
@@ -54,17 +52,15 @@ public class ClientService {
     /**
      * ========= Implementación con Timelimiter ==============
      */
-    @Retry(name = "default")
-    @CircuitBreaker(name = "mitocode-product")
-    @TimeLimiter(name = "mitocode-product-tl")
-    public CompletableFuture<List<ProductDTO>> getAllProductsWithParameterAnnotation(boolean flag) {
-        return
-                CompletableFuture.supplyAsync(
-                        () -> productServiceFeign.getAllProductsWithFlagForSlow(flag)
-                );
-    }
-
-
+//    @Retry(name = "default")
+//    @CircuitBreaker(name = "mitocode-product")
+//    @TimeLimiter(name = "mitocode-product-tl")
+//    public CompletableFuture<List<ProductDTO>> getAllProductsWithParameterAnnotation(boolean flag) {
+//        return
+//                CompletableFuture.supplyAsync(
+//                        () -> productServiceFeign.getAllProductsWithFlagForSlow(flag)
+//                );
+//    }
     public List<ProductDTO> getAllProducts() {
 
         return circuitBreakerFactory.create("mitocode")
@@ -97,10 +93,10 @@ public class ClientService {
     }
 
     public List<ProductDTO> getAllProductsWithParameter(boolean flag) {
-        return null;
-//                circuitBreakerFactory.create("mitocode-slow")
-//                        .run(() -> productServiceFeign.getAllProductsWithFlagForSlow(flag),
-//                                (e) -> customFlagFallback(flag, e));
+        return
+                circuitBreakerFactory.create("mitocode-slow")
+                        .run(() -> productServiceFeign.getAllProductsWithFlagForSlow(flag),
+                                (e) -> customFlagFallback(flag, e));
     }
 
 
@@ -109,26 +105,8 @@ public class ClientService {
      * <p>
      * <p>
      * <p>
-     * public List<ProductDTO> customFlagFallback(boolean flag, Throwable e) {
-     * log.error("With flag " + flag + " : " + e.getMessage());
-     * List<ProductDTO> lstProducts = new ArrayList<>();
-     * lstProducts.add(ProductDTO.builder()
-     * .port(9999)
-     * .price(100L)
-     * .productId("P99999")
-     * .productName("Product Fake")
-     * .productType("Fake")
-     * <p>
-     * .build());
-     * return lstProducts;
-     * }
      */
-
-
-    /**
-     * ========= Implementación con Timelimiter ==============
-     **/
-    public CompletableFuture<List<ProductDTO>> customFlagFallback(boolean flag, Throwable e) {
+    public List<ProductDTO> customFlagFallback(boolean flag, Throwable e) {
         log.error("With flag " + flag + " : " + e.getMessage());
         List<ProductDTO> lstProducts = new ArrayList<>();
         lstProducts.add(ProductDTO.builder()
@@ -139,6 +117,23 @@ public class ClientService {
                 .productType("Fake")
 
                 .build());
-        return CompletableFuture.supplyAsync(()->lstProducts);
+        return lstProducts;
     }
+
+    /**
+     * ========= Implementación con Timelimiter ==============
+     **/
+//    public CompletableFuture<List<ProductDTO>> customFlagFallback(boolean flag, Throwable e) {
+//        log.error("With flag " + flag + " : " + e.getMessage());
+//        List<ProductDTO> lstProducts = new ArrayList<>();
+//        lstProducts.add(ProductDTO.builder()
+//                .port(9999)
+//                .price(100L)
+//                .productId("P99999")
+//                .productName("Product Fake")
+//                .productType("Fake")
+//
+//                .build());
+//        return CompletableFuture.supplyAsync(() -> lstProducts);
+//    }
 }

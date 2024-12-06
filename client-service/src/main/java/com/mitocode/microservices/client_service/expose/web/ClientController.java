@@ -30,9 +30,14 @@ public class ClientController {
         return clientService.saveProduct(productDTO);
     }
 
+//    @GetMapping("/product/{flagSlow}")
+//    public CompletableFuture<List<ProductDTO>> getProductFlag(@PathVariable("flagSlow") boolean flagSlow) {
+//        return clientService.getAllProductsWithParameterAnnotation(flagSlow);
+//    }
+
     @GetMapping("/product/{flagSlow}")
-    public CompletableFuture<List<ProductDTO>> getProductFlag(@PathVariable("flagSlow") boolean flagSlow) {
-        return clientService.getAllProductsWithParameterAnnotation(flagSlow);
+    public List<ProductDTO> getProductFlag(@PathVariable("flagSlow") boolean flagSlow) {
+        return clientService.getAllProductsWithParameter(flagSlow);
     }
 
     @GetMapping("/products/{flagSlow}")

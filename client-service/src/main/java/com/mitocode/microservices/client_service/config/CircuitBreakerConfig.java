@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
 
-@Configuration
+//@Configuration
 public class CircuitBreakerConfig {
 
-    @Bean
+//    @Bean
     public Customizer<Resilience4JCircuitBreakerFactory> customCircuitBreakerFactory() {
 
         return factory -> factory.configureDefault(
@@ -26,9 +26,8 @@ public class CircuitBreakerConfig {
                                          * Permitted Number of Calls in Half Open State: 10 requests
                                          * */
 
-
                                         // Ratio de error
-                                        .slidingWindowSize(15) // 100
+                                        .slidingWindowSize(20) // 100
                                         .failureRateThreshold(20) // 50
                                         .waitDurationInOpenState(Duration.ofSeconds(20)) // 60
                                         .permittedNumberOfCallsInHalfOpenState(9) // 10
