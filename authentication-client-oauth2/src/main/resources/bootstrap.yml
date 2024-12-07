@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: authentication-client-oauth2
+  cloud:
+    config:
+      uri: ${CONFIG.SERVER.HOSTNAME:http://localhost:9000}
+      profile: ${ENVIRONMENT.DEPLOY:dev}
+      enabled: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          # github:
+          # client-id: xxxxxxxxxx
+          # client-secret: xxxxxxxxxx
+          google:
+            client-id: xxxxxxx
+            client-secret: xxxxxx
+encrypt:
+  key: mitocode-secret
