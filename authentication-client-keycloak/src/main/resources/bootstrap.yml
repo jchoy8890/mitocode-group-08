@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: authentication-client-keycloak
+  cloud:
+    config:
+      uri: ${CONFIG.SERVER.HOSTNAME:http://localhost:9000}
+      profile: ${ENVIRONMENT.DEPLOY:dev}
+      enabled: true
+
+encrypt:
+  key: mitocode-secret
+
