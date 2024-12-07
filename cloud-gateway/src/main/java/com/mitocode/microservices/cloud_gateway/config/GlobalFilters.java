@@ -14,7 +14,7 @@ import java.util.Optional;
 
 //@Slf4j
 //@Slf4j
-//@Component
+@Component
 public class GlobalFilters implements GlobalFilter {
 
     @Override
@@ -46,6 +46,9 @@ public class GlobalFilters implements GlobalFilter {
             exchange.getResponse().getHeaders().add("appCallerName", appCallerNameStr);
             exchange.getResponse().getCookies().add("responseCookie", ResponseCookie
                     .from("appCallerName", appCallerNameStr).build());
+
+
+            System.out.println("..::..Global filter finished..::..");
 
         }));
 
