@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: authentication-server-oauth2
+
+  cloud:
+    config:
+      uri: http://localhost:9000
+      profile: dev
+      enabled: true
