@@ -52,8 +52,8 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 
         Map<String, Object> customClaims = new HashMap<>();
 
-        customClaims.put("email", userDTO.getEmail());
-        customClaims.put("username", userDTO.getUsername());
+//        customClaims.put("email", userDTO.getEmail());
+//        customClaims.put("username", userDTO.getUsername());
 
         DefaultOAuth2AccessToken customAccessToken = new DefaultOAuth2AccessToken(oAuth2AccessToken);
         customAccessToken.setAdditionalInformation(customClaims);
