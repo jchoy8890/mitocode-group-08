@@ -3,6 +3,7 @@ package com.mitocode.microservices.cloud_gateway.config;
 //import lombok.extern.slf4j.Slf4j;
 //import lombok.extern.slf4j.Slf4j;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.ResponseCookie;
@@ -12,17 +13,16 @@ import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-//@Slf4j
-//@Slf4j
+@Slf4j
 @Component
 public class GlobalFilters implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-        System.out.println("..::..Global filter started..::..");
-        System.out.println("Prefilter");
-        System.out.println("Request to: " + exchange.getRequest().getURI());
+        log.info("..::..Global filter started..::..");
+        log.info("Prefilter");
+        log.info("Request to: " + exchange.getRequest().getURI());
         Long startTime = System.currentTimeMillis();
 
         String appCallerNameStr = "cloud-gateway";
@@ -39,8 +39,8 @@ public class GlobalFilters implements GlobalFilter {
 
 
         return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-            System.out.println("Postfilter");
-            System.out.println("Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
+            log.info("Postfilter");
+            log.info("Time elapsed: " + (System.currentTimeMillis() - startTime) + " ms");
 
             // Adding headers to Response
             exchange.getResponse().getHeaders().add("appCallerName", appCallerNameStr);
@@ -48,7 +48,7 @@ public class GlobalFilters implements GlobalFilter {
                     .from("appCallerName", appCallerNameStr).build());
 
 
-            System.out.println("..::..Global filter finished..::..");
+            log.info("..::..Global filter finished..::..");
 
         }));
 

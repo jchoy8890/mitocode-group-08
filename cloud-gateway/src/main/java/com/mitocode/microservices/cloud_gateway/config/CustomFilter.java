@@ -1,5 +1,7 @@
 package com.mitocode.microservices.cloud_gateway.config;
 
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.ResponseCookie;
@@ -9,7 +11,7 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.List;
 
-
+@Slf4j
 @Component
 public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.CustomConfiguration> {
 
@@ -20,26 +22,31 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Cust
 
     @Override
     public List<String> shortcutFieldOrder() {
-        return Arrays.asList("headerValue","headerKey", "flag", "value1");
+        return Arrays.asList("headerValue", "headerKey", "flag", "value1");
     }
 
     @Override
     public GatewayFilter apply(CustomConfiguration config) {
 
-        System.out.println("..::..Custom filter started..::..");
 
-        return ((exchange, chain) -> chain.filter(exchange).then(Mono.fromRunnable(() -> {
+        return ((exchange, chain) -> {
+            log.info("..::..Custom filter started..::..");
 
-            exchange.getResponse().getHeaders().add(config.getHeaderKey(), config.getHeaderValue());
-            exchange.getResponse().getCookies().add("responseCookie", ResponseCookie
-                    .from(config.headerKey, config.getHeaderValue()).build());
+            log.info("PRUEBAAAA");
 
-            System.out.println(String.format("Parámetros del Custom Filter: %s %s %s %s", config.getHeaderKey(),
-                    config.getHeaderValue(), config.getValue1(), config.isFlag()));
 
-            System.out.println("..::..Custom filter finished..::..");
+            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                exchange.getResponse().getHeaders().add(config.getHeaderKey(), config.getHeaderValue());
+                exchange.getResponse().getCookies().add("responseCookie", ResponseCookie
+                        .from(config.headerKey, config.getHeaderValue()).build());
 
-        })));
+                log.info(String.format("Parámetros del Custom Filter: %s %s %s %s%n", config.getHeaderKey(),
+                        config.getHeaderValue(), config.getValue1(), config.isFlag()));
+
+                log.info("..::..Custom filter finished..::..");
+            }));
+
+        });
     }
 
     @Override
@@ -48,7 +55,7 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Cust
     }
 
 
-    //    @Data
+    @Data
     public static class CustomConfiguration {
 
         private String headerKey;
@@ -56,36 +63,5 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Cust
         private String value1;
         private boolean flag;
 
-        public String getHeaderKey() {
-            return headerKey;
-        }
-
-        public void setHeaderKey(String headerKey) {
-            this.headerKey = headerKey;
-        }
-
-        public String getHeaderValue() {
-            return headerValue;
-        }
-
-        public void setHeaderValue(String headerValue) {
-            this.headerValue = headerValue;
-        }
-
-        public String getValue1() {
-            return value1;
-        }
-
-        public void setValue1(String value1) {
-            this.value1 = value1;
-        }
-
-        public boolean isFlag() {
-            return flag;
-        }
-
-        public void setFlag(boolean flag) {
-            this.flag = flag;
-        }
     }
 }
