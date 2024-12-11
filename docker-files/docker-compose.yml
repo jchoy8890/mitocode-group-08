@@ -50,6 +50,42 @@ services:
     networks:
       - mitocode
 
+  mysql-keycloak:
+    image: mysql
+    container_name: mitocode-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pwd
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: mitocode-pwd
+    ports:
+      - 3306:3006
+    networks:
+    - mitocode    
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:19.0.1
+    container_name: mitocode-keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: mysql
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: mitocode-pwd
+      KC_DB_URL_HOST: mysql-keycloak
+      KC_DB_URL_PORT: 3306
+      KC_DB_SCHEMA: keycloak
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql-keycloak
+    command: start-dev
+    networks:
+    - mitocode        
+
+
+
+
 networks:
 
   mitocode:
