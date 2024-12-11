@@ -3,6 +3,7 @@ package com.mitocode.microservices.client_service.expose.web;
 import com.mitocode.microservices.client_service.model.dto.ProductDTO;
 import com.mitocode.microservices.client_service.model.dto.UserDTO;
 import com.mitocode.microservices.client_service.service.ClientService;
+import com.mitocode.microservices.client_service.service.ClientServiceWithFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 public class ClientController {
 
     private final ClientService clientService;
+    private final ClientServiceWithFactory clientServiceWithFactory;
 
     @GetMapping("/product")
     public List<ProductDTO> getAllProducts() {
@@ -37,7 +39,7 @@ public class ClientController {
 
     @GetMapping("/product/{flagSlow}")
     public List<ProductDTO> getProductFlag(@PathVariable("flagSlow") boolean flagSlow) {
-        return clientService.getAllProductsWithParameter(flagSlow);
+        return clientService.getAllProductsWithParameterCB(flagSlow);
     }
 
     @GetMapping("/products/{flagSlow}")
