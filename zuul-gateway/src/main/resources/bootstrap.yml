@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: zuul-gateway
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:9000
+      profile: dev
