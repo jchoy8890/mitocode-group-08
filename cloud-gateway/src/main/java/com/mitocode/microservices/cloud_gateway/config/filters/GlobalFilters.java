@@ -1,4 +1,4 @@
-package com.mitocode.microservices.cloud_gateway.config;
+package com.mitocode.microservices.cloud_gateway.config.filters;
 
 //import lombok.extern.slf4j.Slf4j;
 //import lombok.extern.slf4j.Slf4j;
