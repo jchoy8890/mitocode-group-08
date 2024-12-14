@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class JwtService {
@@ -23,10 +25,18 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         UserEntity user = (UserEntity) userDetails;
 
+        Map<String, Object> claims = new HashMap<>();
+//        claims.put("username", user.getUsername());
+        claims.put("email", user.getEmail());
+//        claims.put("password", user.getPassword());
+        claims.put("roles", user.getRoles());
+
+
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .addClaims(claims)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60))
                 .signWith(getKey())
                 .compact();
 
