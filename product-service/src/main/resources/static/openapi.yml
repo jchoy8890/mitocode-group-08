@@ -1,0 +1,596 @@
+openapi: 3.0.1
+info:
+  title: Product Service Microservice
+  description: |-
+    # Módulo del ecosistemas de Arquitectura de Microservicios para gestionar productos
+    1. Funcionalidad expuesta 1
+    1. Funcionalidad expuesta 2
+
+    | Cabecera 1 | Cabecera 2 |
+    | ------------ | ------------- |
+    | Valor 1 | Valor 2 |
+    | Valor 3 | Valor 4 |
+
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9GbVYptQtel20wjvIVX3PS-NwEQSPJzBeIw&s"></img>
+
+  contact:
+    name: Mitocode Network
+    url: https://github.com/jchoy8890
+    email: mitocode@mitocodenetwork.com
+  license:
+    name: Some license
+    url: https://github.com/jchoy8890
+  version: 0.0.1
+servers:
+  - url: http://localhost:9020
+    description: Instancia 1
+  - url: http://localhost:9021
+    description: Instancia2
+tags:
+  - name: ProductQuery
+    description: Grupo de endpoints que filtra productos
+  - name: ProductCommand
+    description: Grupo de endpoints que modifican productos
+paths:
+  /product/reserve/{productId}/{quantity}:
+    put:
+      tags:
+        - ProductCommand
+      description: |-
+        # Método para actualizar productos
+
+        | Cabecera 1 | Cabecera 2 |
+        | ------------ | ------------- |
+        | Valor 1 | Valor 2 |
+        | Valor 3 | Valor 4 |
+
+      operationId: reserve
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: quantity
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                type: string
+  /saveProduct:
+    post:
+      tags:
+        - ProductCommand
+      description: Método para guardar productos
+      operationId: saveProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProductDTO'
+  /products:
+    get:
+      tags:
+        - ProductQuery
+      description: Método para filtrar productos
+      operationId: getAllProductsWithParameter
+      parameters:
+        - name: flag
+          in: query
+          required: true
+          schema:
+            type: boolean
+        - name: appCallerName
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+  /product:
+    get:
+      tags:
+        - ProductQuery
+      description: Método para obtener los productos
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: Response OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /product/{flag}:
+    get:
+      tags:
+        - ProductQuery
+      description: Método para filtrar productos
+      operationId: getAllProductsWithFlag
+      parameters:
+        - name: flag
+          in: path
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+  /product/slow/{flag}:
+    get:
+      tags:
+        - ProductQuery
+      description: Método para filtrar productos
+      operationId: getAllProductsWithFlagForSlow
+      parameters:
+        - name: flag
+          in: path
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+  /product/parameter:
+    get:
+      tags:
+        - ProductQuery
+      description: Método para filtrar productos
+      operationId: getAllProductsWithParam
+      parameters:
+        - name: tokens
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+  /api/mitocode/user:
+    get:
+      tags:
+        - ProductQuery
+      description: Método para filtrar productos
+      operationId: testPrefix
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+components:
+  schemas:
+    ProductDTO:
+      type: object
+      properties:
+        productId:
+          type: string
+        productName:
+          type: string
+        productType:
+          type: string
+        price:
+          type: integer
+          format: int64
+        stock:
+          type: integer
+          format: int32
+        port:
+          type: integer
+          format: int32
+    ContentDisposition:
+      type: object
+      properties:
+        type:
+          type: string
+        name:
+          type: string
+        filename:
+          type: string
+        charset:
+          type: string
+        size:
+          type: integer
+          format: int64
+          deprecated: true
+        creationDate:
+          type: string
+          format: date-time
+          deprecated: true
+        modificationDate:
+          type: string
+          format: date-time
+          deprecated: true
+        readDate:
+          type: string
+          format: date-time
+          deprecated: true
+        attachment:
+          type: boolean
+        formData:
+          type: boolean
+        inline:
+          type: boolean
+    ErrorResponse:
+      type: object
+      properties:
+        detailMessageArguments:
+          type: array
+          items:
+            type: object
+        typeMessageCode:
+          type: string
+        detailMessageCode:
+          type: string
+        titleMessageCode:
+          type: string
+        body:
+          $ref: '#/components/schemas/ProblemDetail'
+        headers:
+          type: object
+          properties:
+            empty:
+              type: boolean
+            location:
+              type: string
+              format: uri
+            host:
+              type: object
+              properties:
+                address:
+                  type: object
+                  properties:
+                    hostAddress:
+                      type: string
+                    address:
+                      type: array
+                      items:
+                        type: string
+                        format: byte
+                    hostName:
+                      type: string
+                    linkLocalAddress:
+                      type: boolean
+                    anyLocalAddress:
+                      type: boolean
+                    multicastAddress:
+                      type: boolean
+                    loopbackAddress:
+                      type: boolean
+                    siteLocalAddress:
+                      type: boolean
+                    mcglobal:
+                      type: boolean
+                    mcnodeLocal:
+                      type: boolean
+                    mclinkLocal:
+                      type: boolean
+                    mcsiteLocal:
+                      type: boolean
+                    mcorgLocal:
+                      type: boolean
+                    canonicalHostName:
+                      type: string
+                port:
+                  type: integer
+                  format: int32
+                unresolved:
+                  type: boolean
+                hostName:
+                  type: string
+                hostString:
+                  type: string
+            all:
+              type: object
+              additionalProperties:
+                type: string
+              writeOnly: true
+            lastModified:
+              type: integer
+              format: int64
+            date:
+              type: integer
+              format: int64
+            contentLength:
+              type: integer
+              format: int64
+            acceptLanguageAsLocales:
+              type: array
+              items:
+                type: object
+                properties:
+                  language:
+                    type: string
+                  displayName:
+                    type: string
+                  country:
+                    type: string
+                  variant:
+                    type: string
+                  script:
+                    type: string
+                  unicodeLocaleAttributes:
+                    uniqueItems: true
+                    type: array
+                    items:
+                      type: string
+                  unicodeLocaleKeys:
+                    uniqueItems: true
+                    type: array
+                    items:
+                      type: string
+                  displayLanguage:
+                    type: string
+                  displayScript:
+                    type: string
+                  displayCountry:
+                    type: string
+                  displayVariant:
+                    type: string
+                  extensionKeys:
+                    uniqueItems: true
+                    type: array
+                    items:
+                      type: string
+                  iso3Language:
+                    type: string
+                  iso3Country:
+                    type: string
+            accessControlAllowHeaders:
+              type: array
+              items:
+                type: string
+            accessControlAllowMethods:
+              type: array
+              items:
+                $ref: '#/components/schemas/HttpMethod'
+            accessControlAllowOrigin:
+              type: string
+            accessControlExposeHeaders:
+              type: array
+              items:
+                type: string
+            accessControlRequestHeaders:
+              type: array
+              items:
+                type: string
+            accessControlRequestMethod:
+              $ref: '#/components/schemas/HttpMethod'
+            accessControlAllowCredentials:
+              type: boolean
+            accessControlMaxAge:
+              type: integer
+              format: int64
+            acceptCharset:
+              type: array
+              items:
+                type: string
+            cacheControl:
+              type: string
+            contentDisposition:
+              $ref: '#/components/schemas/ContentDisposition'
+            contentLanguage:
+              type: object
+              properties:
+                language:
+                  type: string
+                displayName:
+                  type: string
+                country:
+                  type: string
+                variant:
+                  type: string
+                script:
+                  type: string
+                unicodeLocaleAttributes:
+                  uniqueItems: true
+                  type: array
+                  items:
+                    type: string
+                unicodeLocaleKeys:
+                  uniqueItems: true
+                  type: array
+                  items:
+                    type: string
+                displayLanguage:
+                  type: string
+                displayScript:
+                  type: string
+                displayCountry:
+                  type: string
+                displayVariant:
+                  type: string
+                extensionKeys:
+                  uniqueItems: true
+                  type: array
+                  items:
+                    type: string
+                iso3Language:
+                  type: string
+                iso3Country:
+                  type: string
+            ifUnmodifiedSince:
+              type: integer
+              format: int64
+            acceptLanguage:
+              type: array
+              items:
+                type: object
+                properties:
+                  range:
+                    type: string
+                  weight:
+                    type: number
+                    format: double
+            basicAuth:
+              type: string
+              writeOnly: true
+            accept:
+              type: array
+              items:
+                $ref: '#/components/schemas/MediaType'
+            acceptPatch:
+              type: array
+              items:
+                $ref: '#/components/schemas/MediaType'
+            allow:
+              uniqueItems: true
+              type: array
+              items:
+                $ref: '#/components/schemas/HttpMethod'
+            bearerAuth:
+              type: string
+              writeOnly: true
+            connection:
+              type: array
+              items:
+                type: string
+            etag:
+              type: string
+            expires:
+              type: integer
+              format: int64
+            ifMatch:
+              type: array
+              items:
+                type: string
+            ifNoneMatch:
+              type: array
+              items:
+                type: string
+            origin:
+              type: string
+            pragma:
+              type: string
+            range:
+              type: array
+              items:
+                $ref: '#/components/schemas/HttpRange'
+            upgrade:
+              type: string
+            vary:
+              type: array
+              items:
+                type: string
+            contentType:
+              $ref: '#/components/schemas/MediaType'
+            ifModifiedSince:
+              type: integer
+              format: int64
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        statusCode:
+          $ref: '#/components/schemas/HttpStatusCode'
+    HttpMethod:
+      type: object
+    HttpRange:
+      type: object
+    HttpStatusCode:
+      type: object
+      properties:
+        error:
+          type: boolean
+        is4xxClientError:
+          type: boolean
+        is5xxServerError:
+          type: boolean
+        is1xxInformational:
+          type: boolean
+        is2xxSuccessful:
+          type: boolean
+        is3xxRedirection:
+          type: boolean
+    MediaType:
+      type: object
+      properties:
+        type:
+          type: string
+        subtype:
+          type: string
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+        qualityValue:
+          type: number
+          format: double
+        wildcardSubtype:
+          type: boolean
+        subtypeSuffix:
+          type: string
+        wildcardType:
+          type: boolean
+        concrete:
+          type: boolean
+        charset:
+          type: string
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        properties:
+          type: object
+          additionalProperties:
+            type: object

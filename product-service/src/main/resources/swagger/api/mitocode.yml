@@ -1,0 +1,76 @@
+openapi: "3.0.1"
+
+info:
+  title: "User Stub Microservice"
+  version: "1"
+  description: User API
+
+servers:
+  - url: http://localhost:8080/api
+    description: Local server
+
+paths:
+  /user:
+    post:
+      summary: Save User
+      operationId: saveUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+
+  /user/{id}:
+    get:
+      summary: Get User By Id
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: Unique Id of an User
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+
+components:
+  schemas:
+    UserDTO:
+      type: object
+      description: Data element for User
+      required:
+        - email
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        firstName:
+          type: string
+          minLength: 3
+        lastName:
+          type: string
+
+    ErrorMitocode:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

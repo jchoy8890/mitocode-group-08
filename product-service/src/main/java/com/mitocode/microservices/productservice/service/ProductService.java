@@ -1,6 +1,7 @@
 package com.mitocode.microservices.productservice.service;
 
 
+import com.mitocode.common.stub.models.ErrorMitocode;
 import com.mitocode.microservices.productservice.model.dto.ProductDTO;
 import com.mitocode.microservices.productservice.model.entity.ProductEntity;
 import com.mitocode.microservices.productservice.model.entity.ProductPostgresEntity;
@@ -53,6 +54,12 @@ public class ProductService {
             ProductDTO productDTO = ProductDTO.builder().build();
             BeanUtils.copyProperties(productEntity, productDTO);
             productDTO.setPort(port);
+
+            ErrorMitocode errorMitocode = new ErrorMitocode();
+            errorMitocode.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorMitocode.setMessage("Internal Server Error");
+
+            log.info(errorMitocode.toString());
 
 
             return productDTO;
