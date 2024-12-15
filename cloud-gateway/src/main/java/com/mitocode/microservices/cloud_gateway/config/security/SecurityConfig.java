@@ -25,10 +25,13 @@ public class SecurityConfig {
         log.info("Validating token");
 
         return http.authorizeExchange(exchange ->
-                        exchange.pathMatchers(HttpMethod.GET,"/api/product/**").permitAll()
-                                .pathMatchers(HttpMethod.POST,"/api/product/**").hasRole("MAINTAINER")
-                                .pathMatchers("/api/user/**").hasAnyRole("ADMIN", "MAINTAINER")
-                                .anyExchange().authenticated())
+                        exchange
+                                .pathMatchers("/**").permitAll()
+                                .anyExchange().permitAll())
+//                                .pathMatchers(HttpMethod.GET,"/api/product/**").permitAll()
+//                                .pathMatchers(HttpMethod.POST,"/api/product/**").hasRole("MAINTAINER")
+//                                .pathMatchers("/api/user/**").hasAnyRole("ADMIN", "MAINTAINER")
+//                                .anyExchange().authenticated())
                 .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHORIZATION)
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .build();
