@@ -1,0 +1,9 @@
+scrape_configs:
+
+  - job_name: 'Product Service Microservice'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['localhost:9020']
+        labels:
+          application: 'Product Service Microservice Scrapping'

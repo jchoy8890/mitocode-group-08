@@ -83,9 +83,29 @@ services:
     networks:
     - mitocode        
 
+  prometheus:
+    image: prom/prometheus
+    container_name: mitocode-prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/config/:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+    - mitocode     
 
-
-
+  grafana:
+    image: grafana/grafana-oss
+    container_name: mitocode-grafana
+    ports:
+      - 3000:3000
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SERVER_DOMAIN: localhost
+    networks:
+    - mitocode  
+    
 networks:
 
   mitocode:
