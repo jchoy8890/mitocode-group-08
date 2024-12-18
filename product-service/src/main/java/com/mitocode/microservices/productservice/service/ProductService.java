@@ -1,7 +1,7 @@
 package com.mitocode.microservices.productservice.service;
 
 
-import com.mitocode.common.stub.models.ErrorMitocode;
+//import com.mitocode.common.stub.models.ErrorMitocode;
 import com.mitocode.microservices.productservice.model.dto.ProductDTO;
 import com.mitocode.microservices.productservice.model.entity.ProductEntity;
 import com.mitocode.microservices.productservice.model.entity.ProductPostgresEntity;
@@ -10,6 +10,8 @@ import com.mitocode.microservices.productservice.service.repository.ProductRepos
 import com.mitocode.microservices.productservice.util.UtilMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,8 @@ import java.util.stream.StreamSupport;
 public class ProductService {
 
 
+//    Logger logger =  LoggerFactory.getLogger(ProductService.class);
+
     private final UtilMapper utilMapper;
     private final ProductRepository productRepository;
     private final ProductPostgreSQLRepository productPostgreSQLRepository;
@@ -41,6 +45,12 @@ public class ProductService {
         productPostgreSQLRepository.save(productPostgreSQLEntity);
         productDTO.setPort(port);
 
+        log.info("INFO");
+        log.trace("TRACE");
+        log.error("ERROR");
+        log.warn("WARN");
+        log.trace("TRACE");
+
         return productDTO;
 
     }
@@ -55,11 +65,18 @@ public class ProductService {
             BeanUtils.copyProperties(productEntity, productDTO);
             productDTO.setPort(port);
 
-            ErrorMitocode errorMitocode = new ErrorMitocode();
-            errorMitocode.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            errorMitocode.setMessage("Internal Server Error");
+//            ErrorMitocode errorMitocode = new ErrorMitocode();
+//            errorMitocode.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+//            errorMitocode.setMessage("Internal Server Error");
+//
+//            log.info(errorMitocode.toString());
 
-            log.info(errorMitocode.toString());
+            log.info("INFO");
+            log.trace("TRACE");
+            log.error("ERROR");
+            log.warn("WARN");
+            log.trace("TRACE");
+
 
 
             return productDTO;
