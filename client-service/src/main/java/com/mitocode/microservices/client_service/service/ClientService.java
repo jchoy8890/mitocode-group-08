@@ -2,6 +2,7 @@ package com.mitocode.microservices.client_service.service;
 
 import com.mitocode.microservices.client_service.model.dto.ProductDTO;
 import com.mitocode.microservices.client_service.model.dto.UserDTO;
+import com.mitocode.microservices.client_service.proxy.openfeign.CloudGatewayFeign;
 import com.mitocode.microservices.client_service.proxy.openfeign.ProductServiceFeign;
 import com.mitocode.microservices.client_service.proxy.openfeign.UserServiceFeign;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -9,7 +10,6 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,23 +20,20 @@ import java.util.List;
 public class ClientService {
 
 
-    private final ProductServiceFeign productServiceFeign;
-    private final UserServiceFeign userServiceFeign;
-    private final RestTemplate restTemplate;
-
+//    private final ProductServiceFeign productServiceFeign;
+//    private final UserServiceFeign userServiceFeign;
+    private final CloudGatewayFeign cloudGatewayFeign;
 
     @CircuitBreaker(name = "mitocode-product", fallbackMethod = "customSimpleFallback")
     public List<ProductDTO> getAllProductsAnnotation() {
-        return productServiceFeign.getAllProducts();
+        return cloudGatewayFeign.getAllProducts();
     }
-
-
 
 
     @Retry(name = "retry-product")
     @CircuitBreaker(name = "mitocode-product", fallbackMethod = "customFlagFallback")
     public List<ProductDTO> getAllProductsWithParameterCB(boolean flag) {
-        return productServiceFeign
+        return cloudGatewayFeign
                 .getAllProductsWithParameter(flag, "client-service");
 
 
@@ -53,7 +50,7 @@ public class ClientService {
 
     @CircuitBreaker(name = "mitocode-product", fallbackMethod = "customFlagFallback")
     public List<ProductDTO> getAllProductsWithParameterAnnotation(boolean flag) {
-        return productServiceFeign.getAllProductsWithFlagForSlow(flag);
+        return cloudGatewayFeign.getAllProductsWithFlagForSlow(flag);
     }
 
 
@@ -72,11 +69,11 @@ public class ClientService {
     }
 */
     public UserDTO getAllUsers() {
-        return userServiceFeign.getAllUsers();
+        return cloudGatewayFeign.getAllUsers();
     }
 
     public ProductDTO saveProduct(ProductDTO productDTO) {
-        return productServiceFeign.createProduct(productDTO);
+        return cloudGatewayFeign.createProduct(productDTO);
     }
 
     public List<ProductDTO> customFlagFallback(boolean flag, Throwable e) {
