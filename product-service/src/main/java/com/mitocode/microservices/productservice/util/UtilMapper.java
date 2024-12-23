@@ -1,8 +1,8 @@
 package com.mitocode.microservices.productservice.util;
 
-import com.mitocode.microservices.productservice.model.dto.ProductDTO;
-import com.mitocode.microservices.productservice.model.entity.ProductEntity;
-import com.mitocode.microservices.productservice.model.entity.ProductPostgresEntity;
+import com.mitocode.microservices.common_models.model.dto.ProductDTO;
+import com.mitocode.microservices.common_models.model.entity.ProductEntity;
+import com.mitocode.microservices.common_models.model.entity.ProductPostgresEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class UtilMapper {
 
     public ProductEntity convertDTOtoEntity(ProductDTO productDTO) {
-        com.mitocode.microservices.productservice.model.entity.ProductEntity productEntity = com.mitocode.microservices.productservice.model.entity.ProductEntity.builder().build();
+        ProductEntity productEntity = ProductEntity.builder().build();
         BeanUtils.copyProperties(productDTO, productEntity);
         return productEntity;
     }

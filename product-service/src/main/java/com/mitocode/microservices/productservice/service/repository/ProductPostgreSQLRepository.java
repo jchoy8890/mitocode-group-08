@@ -1,6 +1,6 @@
 package com.mitocode.microservices.productservice.service.repository;
 
-import com.mitocode.microservices.productservice.model.entity.ProductPostgresEntity;
+import com.mitocode.microservices.common_models.model.entity.ProductPostgresEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

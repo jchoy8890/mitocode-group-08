@@ -1,25 +1,13 @@
 package com.mitocode.microservices.productservice.expose.web;
 
 
-import com.mitocode.microservices.productservice.model.dto.ProductDTO;
+import com.mitocode.microservices.common_models.model.dto.ProductDTO;
 import com.mitocode.microservices.productservice.service.ProductService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.servers.Server;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,9 +43,10 @@ import java.util.concurrent.TimeUnit;
 //)
 public class ProductController {
 
+
     private final ProductService productService;
 
-//    @Operation(
+    //    @Operation(
 //            description = "Método para obtener los productos",
 //            tags = {"ProductQuery"},
 //            responses = {
@@ -83,7 +72,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-//    @Operation(
+    //    @Operation(
 //            description = "Método para guardar productos",
 //            tags = {"ProductCommand"}
 //    )
@@ -131,7 +120,8 @@ public class ProductController {
 
         if (flag) {
             TimeUnit.MILLISECONDS.sleep(795);
-            throw new Exception("Probando Circuit Breaker");
+//            throw new Exception("Probando Circuit Breaker");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(productService.getAllProducts());
     }
