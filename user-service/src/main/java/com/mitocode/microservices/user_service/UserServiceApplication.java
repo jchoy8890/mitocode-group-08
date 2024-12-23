@@ -1,7 +1,5 @@
 package com.mitocode.microservices.user_service;
 
-import com.mitocode.microservices.user_service.model.entity.UserEntity;
-import com.mitocode.microservices.user_service.service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;

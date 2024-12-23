@@ -1,6 +1,6 @@
 package com.mitocode.microservices.user_service.service.repository;
 
-import com.mitocode.microservices.user_service.model.entity.UserEntity;
+import com.mitocode.microservices.common_models.model.entity.UserEntity;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;

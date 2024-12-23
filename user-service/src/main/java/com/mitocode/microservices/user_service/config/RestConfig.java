@@ -1,6 +1,6 @@
 package com.mitocode.microservices.user_service.config;
 
-import com.mitocode.microservices.user_service.model.entity.UserEntity;
+import com.mitocode.microservices.common_models.model.entity.UserEntity;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
