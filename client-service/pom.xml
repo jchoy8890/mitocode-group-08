@@ -127,6 +127,12 @@
 			<artifactId>micrometer-registry-otlp</artifactId>
 		</dependency>
 
+		<!-- Common Models -->
+		<dependency>
+			<groupId>com.mitocode.microservices</groupId>
+			<artifactId>common-models</artifactId>
+			<version>0.0.8-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>

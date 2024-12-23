@@ -1,10 +1,8 @@
 package com.mitocode.microservices.client_service.service;
 
-import com.mitocode.microservices.client_service.model.dto.ProductDTO;
-import com.mitocode.microservices.client_service.model.dto.UserDTO;
 import com.mitocode.microservices.client_service.proxy.openfeign.CloudGatewayFeign;
-import com.mitocode.microservices.client_service.proxy.openfeign.ProductServiceFeign;
-import com.mitocode.microservices.client_service.proxy.openfeign.UserServiceFeign;
+import com.mitocode.microservices.common_models.model.dto.ProductDTO;
+import com.mitocode.microservices.common_models.model.dto.UserDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +18,7 @@ import java.util.List;
 public class ClientService {
 
 
-//    private final ProductServiceFeign productServiceFeign;
+    //    private final ProductServiceFeign productServiceFeign;
 //    private final UserServiceFeign userServiceFeign;
     private final CloudGatewayFeign cloudGatewayFeign;
 

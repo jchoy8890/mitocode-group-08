@@ -1,14 +1,13 @@
 package com.mitocode.microservices.client_service.expose.web;
 
-import com.mitocode.microservices.client_service.model.dto.ProductDTO;
-import com.mitocode.microservices.client_service.model.dto.UserDTO;
 import com.mitocode.microservices.client_service.service.ClientService;
 import com.mitocode.microservices.client_service.service.ClientServiceWithFactory;
+import com.mitocode.microservices.common_models.model.dto.ProductDTO;
+import com.mitocode.microservices.common_models.model.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +15,8 @@ public class ClientController {
 
     private final ClientService clientService;
     private final ClientServiceWithFactory clientServiceWithFactory;
+
+
 
     @GetMapping("/product")
     public List<ProductDTO> getAllProducts() {

@@ -1,7 +1,7 @@
 package com.mitocode.microservices.client_service.proxy.openfeign;
 
-import com.mitocode.microservices.client_service.model.dto.ProductDTO;
-import com.mitocode.microservices.client_service.model.dto.UserDTO;
+import com.mitocode.microservices.common_models.model.dto.ProductDTO;
+import com.mitocode.microservices.common_models.model.dto.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

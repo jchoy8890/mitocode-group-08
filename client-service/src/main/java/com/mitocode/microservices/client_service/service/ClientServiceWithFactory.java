@@ -1,7 +1,7 @@
 package com.mitocode.microservices.client_service.service;
 
-import com.mitocode.microservices.client_service.model.dto.ProductDTO;
 import com.mitocode.microservices.client_service.proxy.openfeign.ProductServiceFeign;
+import com.mitocode.microservices.common_models.model.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
