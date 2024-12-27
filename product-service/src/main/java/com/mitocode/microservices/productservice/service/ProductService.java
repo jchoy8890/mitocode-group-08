@@ -3,9 +3,11 @@ package com.mitocode.microservices.productservice.service;
 
 //import com.mitocode.common.stub.models.ErrorMitocode;
 
+import com.mitocode.microservices.common_models.model.dto.GenericModel;
 import com.mitocode.microservices.common_models.model.dto.ProductDTO;
 import com.mitocode.microservices.common_models.model.entity.ProductEntity;
 import com.mitocode.microservices.common_models.model.entity.ProductPostgresEntity;
+import com.mitocode.microservices.common_models.model.entity.UserEntity;
 import com.mitocode.microservices.productservice.service.repository.ProductPostgreSQLRepository;
 import com.mitocode.microservices.productservice.service.repository.ProductRepository;
 import com.mitocode.microservices.productservice.util.KafkaUtil;
@@ -42,6 +44,7 @@ public class ProductService {
         ProductPostgresEntity productPostgreSQLEntity = utilMapper.convertDTOtoEntityPostgreSQL(productDTO);
         productRepository.save(productEntity);
         productPostgreSQLRepository.save(productPostgreSQLEntity);
+//        kafkaUtil.sendMessage(new GenericModel<>(productDTO, ProductDTO.class.getSimpleName()));
         productDTO.setPort(port);
         return productDTO;
     }
@@ -62,7 +65,27 @@ public class ProductService {
 //
 //            log.info(errorMitocode.toString());
 
-            kafkaUtil.sendMessage(productDTO.toString());
+            GenericModel<ProductDTO> genericModel = new GenericModel<>(ProductDTO.builder()
+                    .price(productDTO.getPrice())
+                    .productName(productDTO.getProductName())
+                    .productType(productDTO.getProductType())
+                    .productId(productDTO.getProductId())
+                    .stock(productDTO.getStock())
+                    .port(productDTO.getPort())
+                    .build(), ProductDTO.class.getSimpleName());
+
+//            GenericModel<ProductDTO> genericModel =
+//                    new GenericModel<>(productDTO, ProductDTO.class.getSimpleName());
+
+            kafkaUtil.sendMessage(genericModel);
+
+
+            GenericModel<UserEntity> genericModelUser = new GenericModel<>(UserEntity.builder()
+                    .name("Jonathan")
+                    .lastname("Choy")
+                    .build(), UserEntity.class.getSimpleName());
+
+            kafkaUtil.sendMessage(genericModelUser);
 
 
             return productDTO;
