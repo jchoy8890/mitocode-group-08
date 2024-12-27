@@ -61,6 +61,16 @@
 			<groupId>com.mitocode.microservices</groupId>
 			<artifactId>common-models</artifactId>
 			<version>0.0.8-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-data-jpa</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-data-mongodb</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
