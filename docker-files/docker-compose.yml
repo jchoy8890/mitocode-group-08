@@ -106,6 +106,77 @@ services:
     networks:
     - mitocode  
     
+  loki:
+    image: grafana/loki
+    container_name: mitocode-loki
+    ports:
+      - 3100:3100
+    networks:
+      - mitocode
+
+  zipkin:
+    image: ghcr.io/openzipkin/zipkin-slim
+    container_name: mitocode-zipkin
+    ports:
+      - 9411:9411
+    environment:
+      - STORAGE_TYPE=mem
+    networks:
+      - mitocode
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: mitocode-kafka-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - mitocode
+
+  broker:
+    image: confluentinc/cp-kafka
+    container_name: mitocode-kafka-broker
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT, PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092, PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_REPLICATION_FACTOR: 1
+    networks:
+      - mitocode
+
+  mongo-service-kafka: # Id interno del servicio en mongo
+    image: mongo
+    container_name: mitocode-mongo-kafka
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mitocode
+      MONGO_INITDB_ROOT_PASSWORD: mitocode
+      MONGO_INITDB_DATABASE: mitocode
+    ports: 
+      - 27018:27017
+    networks:
+      - mitocode
+
+  mongo-express-kafka:
+    image: mongo-express
+    container_name: mitocode-mongo-express-kafka
+    depends_on:
+      - mongo-service-kafka
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mitocode
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mitocode
+      ME_CONFIG_MONGODB_URL: mongodb://mitocode:mitocode@mongo-service-kafka:27017
+    networks:
+      - mitocode
+
 networks:
 
   mitocode:
