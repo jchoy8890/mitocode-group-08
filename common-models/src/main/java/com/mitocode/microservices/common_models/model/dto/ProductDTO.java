@@ -2,12 +2,18 @@ package com.mitocode.microservices.common_models.model.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+import java.io.Serial;
+import java.io.Serializable;
+
+@Data
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO {
+public class ProductDTO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String productId;
     private String productName;

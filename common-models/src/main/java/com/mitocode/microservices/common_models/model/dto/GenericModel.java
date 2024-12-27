@@ -1,4 +1,4 @@
-package com.mitocode.microservices.common_models.model;
+package com.mitocode.microservices.common_models.model.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

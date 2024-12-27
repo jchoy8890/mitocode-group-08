@@ -7,12 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "audit")
-public class AuditEntity {
+public class AuditEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private Long currentTimestamp;
     private String appCallerName;

@@ -7,14 +7,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 
 @Data
 @Builder
-@Document(collection = "product")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductEntity {
+@Document(collection = "product")
+public class ProductEntity implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String productId;
@@ -22,6 +27,7 @@ public class ProductEntity {
     private String productType;
     private Long price;
     private Integer stock;
+    private Long total;
 
 
 }
