@@ -1,0 +1,161 @@
+
+services:
+
+  mongo-service:
+    image: mongo
+    container_name: mitocode-docker-mongo-service
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mitocode
+      MONGO_INITDB_ROOT_PASSWORD: mitocode
+    networks:
+      - mitocode
+    volumes:
+      - mitocode-mongodb-storage:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: mitocode-docker-mongo-express
+    ports: 
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mitocode
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mitocode
+      ME_CONFIG_MONGODB_URL: mongodb://mitocode:mitocode@mongo-service:27017
+    networks:
+      - mitocode
+
+  discovery-server:
+    build: .
+    container_name: mitocode-discovery-server
+    healthcheck:
+      test: [ "CMD", "curl", "http://localhost:8761"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    ports:
+      - 8761:8761
+    environment:
+      CUSTOM.SERVER.PORT: 8761
+    networks:
+      - mitocode
+
+
+#  zookeeper:
+#    image: confluentinc/cp-zookeeper
+#    container_name: mitocode-docker-kafka-zookeeper
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: 2181
+#      ZOOKEEPER_TICK_TIME: 2000
+#    networks:
+#      - mitocode
+#
+#  broker:
+#    image: confluentinc/cp-kafka
+#    container_name: mitocode-docker-kafka-broker
+#    ports:
+#      - 9092:9092
+#    depends_on:
+#      - zookeeper
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT, PLAINTEXT_INTERNAL:PLAINTEXT
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+#      KAFKA_TRANSACTION_STATE_LOG_MIN_REPLICATION_FACTOR: 1
+#    networks:
+#      - mitocode
+
+  config-server:
+    build: ../config-server/
+    container_name: mitocode-config-server
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:9000/product-service/dev"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    environment:
+      CUSTOM.SERVER.PORT: 9000
+      EUREKA.SERVER.HOSTNAME: http://discovery-server:8761/eureka
+    networks:
+      - mitocode
+
+  postgres-mitocode:
+    image: postgres:13.1-alpine
+    container_name: mitocode-docker-postgresql
+    environment:
+      POSTGRES_USER: mitocode
+      POSTGRES_PASSWORD: mitocode
+      POSTGRES_DB: mitocodedb
+    networks:
+      - mitocode
+
+  product-service:
+    build: ../product-service/
+    container_name: mitocode-product-service
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    environment:
+      EUREKA.SERVER.HOSTNAME: http://discovery-server:8761/eureka
+      CONFIG.SERVER.HOSTNAME: http://config-server:9000
+      MONGODB.URL.CONNECTION: mongodb://mitocode:mitocode@mongo-service:27017/mitocode?authSource=admin
+#      KAFKA.SERVER.HOSTNAME: broker
+      POSTGRESQL.URL.CONNECTION: jdbc:postgresql://postgres-mitocode:5432/mitocodedb
+#      ZIPKIN.SERVER.HOSTNAME: http://zipkin:9411/api/v2/spans
+    networks:
+      - mitocode
+
+#  zipkin:
+#    image: ghcr.io/openzipkin/zipkin-slim
+#    container_name: mitocode-docker-zipkin
+#    environment:
+#      - STORAGE_TYPE=mem
+#    ports:
+#      - 9411:9411
+#    networks:
+#      - mitocode
+#
+#  prometheus:
+#    image: prom/prometheus
+#    container_name: mitocode-docker-prometheus
+#    ports:
+#      - 9090:9090
+#    volumes:
+#      - ./prometheus/config/:/etc/prometheus/
+#    command:
+#      - '--config.file=/etc/prometheus/prometheus.yml'
+#    networks:
+#      - mitocode
+
+  cloud-gateway:
+    build: ../cloud-gateway/
+    container_name: mitocode-cloud-gateway
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    ports:
+      - 9080:9080
+    environment:
+      EUREKA.SERVER.HOSTNAME: http://discovery-server:8761/eureka
+      CONFIG.SERVER.HOSTNAME: http://config-server:9000
+#      ZIPKIN.SERVER.HOSTNAME: http://zipkin:9411/api/v2/spans
+    networks:
+      - mitocode
+
+volumes:
+  mitocode-mongodb-storage:
+
+networks:
+  mitocode:
+    name: mitocode-network
