@@ -95,7 +95,8 @@ public class ProductService {
     }
 
     public String updateProduct(String productId, Integer quantity) {
-        ProductEntity productEntity = productRepository.findById(productId)
+        log.info("productId: " + productId);
+        ProductEntity productEntity = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
         productEntity.setStock(productEntity.getStock() - quantity);
         productRepository.save(productEntity);
