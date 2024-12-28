@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: order-service
+  cloud:
+    config:
+      uri: ${CONFIG.SERVER.HOSTNAME:http://localhost:9000}
+      profile: dev
+      enabled: true
