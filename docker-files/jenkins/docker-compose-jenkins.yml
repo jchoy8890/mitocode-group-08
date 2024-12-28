@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+
+  docker-in-docker-container:
+    image: docker:dind
+    container_name: docker-in-docker-container
+    user: root
+    privileged: true
+    ports:
+      - 2375:2375
+      - 4243:4243
+    volumes:
+      - ./jenkins/:/var/jenkins_home
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    restart: on-failure
+    networks:
+      - mitocode
+
+  jenkins-container:
+    container_name: mitocode-jenkins-container
+    build: jenkins/
+    volumes:
+      - ./jenkins/:/var/jenkins_home
+    user: root
+    depends_on:
+      - docker-in-docker-container
+    privileged: true
+    environment:
+      DOCKER_HOST: tcp://docker-in-docker-container:2375
+    ports:
+      - 50000:50000
+      - 8080:8080
+    networks:
+      - mitocode
+
+networks:
+  mitocode:
+    name: mitocode-network
